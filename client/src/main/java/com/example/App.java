@@ -12,18 +12,21 @@ import java.net.Socket;
 public class App {
     public static void main(String[] args) {
         try {
-            Socket socket = new Socket("localhost", 3000);
+            // creao un socket / collegamento al server
+            Socket socket = new Socket("10.22.9.15", 3000);
+            // creo i buffer e stream per comunicare
             DataOutputStream outVersoServer = new DataOutputStream(socket.getOutputStream());
             BufferedReader inDalServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            // leggo dalla tastiera
             String rigaRitornata;
             do {
+                // leggo un numero dalla tastiera
                 System.out.println("metti un numero...");
                 BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+                // converto in int
                 Integer num = Integer.parseInt(in.readLine());
-
+                // invio il numero al server
                 outVersoServer.writeBytes(num + "\n");
+                // aspetto la risposta dal server
                 rigaRitornata = inDalServer.readLine();
                 switch (rigaRitornata) {
                     case "1":
@@ -39,9 +42,11 @@ public class App {
                         break;
                 }
             } while (!rigaRitornata.equals("3"));
-
+            // aspetto il numero di tentativi dal server
             rigaRitornata = inDalServer.readLine();
+            // stampo
             System.out.println("\n\nFine " + rigaRitornata);
+            // chiudo il socket (chiuso dal client!)
             socket.close();
 
         } catch (Exception e) {
