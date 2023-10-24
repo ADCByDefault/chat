@@ -10,16 +10,18 @@ public class ThreadGioco extends Thread {
     int numrand;
     BufferedReader inDalClient;
     DataOutputStream outVersoClient;
-    public ThreadGioco(Socket client, int numrand){
+
+    public ThreadGioco(Socket client, int numrand) {
         this.client = client;
         this.numrand = numrand;
     }
-    public void run(){
+
+    public void run() {
         int numrand = this.numrand;
         int num;
         int cont = 0;
-         try{
-            System.out.println("sono collegato al client: " + client.getInetAddress());
+        try {
+            System.out.println("sono collegato al client: " + client.getInetAddress() + " suo numero è " + numrand);
             // creao i tubi
             this.inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
             this.outVersoClient = new DataOutputStream(client.getOutputStream());
@@ -27,24 +29,30 @@ public class ThreadGioco extends Thread {
             do {
                 // leggo il numero in arrivo dal client
                 num = Integer.parseInt(inDalClient.readLine());
+
+                String daRitornare = "";
+
                 if (num == numrand) {
-                    System.out.println("\ninvio 3");
-                    outVersoClient.writeBytes("3" + "\n");
+                    daRitornare = "3";
                 }
                 if (num > numrand) {
-                    System.out.println("\ninvio 2");
-                    outVersoClient.writeBytes("2" + "\n");
+                    daRitornare = "2";
                 }
                 if (num < numrand) {
-                    System.out.println("\ninvio 1");
-                    outVersoClient.writeBytes("1" + "\n");
+                    daRitornare = "1";
                 }
+
+                outVersoClient.writeBytes(daRitornare + "\n");
+                daRitornare = client.getInetAddress() + " da indovinare : " + numrand
+                        + " utente ha messo: " + num + " ritorno: " + daRitornare;
+                System.out.println(daRitornare);
                 cont++;
             } while (numrand != num);
             // invio il numero di tentativi
             outVersoClient.writeBytes(cont + "\n");
-        }catch(Exception e){
-            System.out.println("/t/terrore nella comunicazione: " + e.getMessage());
+            System.out.println("\nclient " + client.getInetAddress() + " ha finito con " + cont + " tentaivi");
+        } catch (Exception e) {
+            System.out.println("\t\terrore nella comunicazione: " + e.getMessage());
         }
     }
 }

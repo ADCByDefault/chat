@@ -14,11 +14,10 @@ public class App {
             // creao un socket
             ServerSocket serverSocket = new ServerSocket(3000);
             // accetto il client che si collega
-            while(true){
-                int numrand = (int) (Math.random() * 9 + 1);
-                System.out.println("numero generato è: " + numrand);
+            while (true) {
                 // apro il socket di ascolto
                 Socket client = serverSocket.accept();
+                int numrand = (int) (Math.random() * 9 + 1);
                 // passo tutto alla classe ThreadGioco
                 ThreadGioco th = new ThreadGioco(client, numrand);
                 th.start();

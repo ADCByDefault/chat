@@ -13,7 +13,7 @@ public class App {
     public static void main(String[] args) {
         try {
             // creao un socket / collegamento al server
-            Socket socket = new Socket("10.22.9.15", 3000);
+            Socket socket = new Socket("localhost", 3000);
             // creo i buffer e stream per comunicare
             DataOutputStream outVersoServer = new DataOutputStream(socket.getOutputStream());
             BufferedReader inDalServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
