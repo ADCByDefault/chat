@@ -4,53 +4,69 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ThreadGioco extends Thread {
     Socket client;
-    int numrand;
+    Biglietto b;
     BufferedReader inDalClient;
     DataOutputStream outVersoClient;
+    ArrayList<Socket> listaClient;
 
-    public ThreadGioco(Socket client, int numrand) {
+    public ThreadGioco(Socket client, Biglietto b, ArrayList<Socket> listaClient) {
         this.client = client;
-        this.numrand = numrand;
+        this.b = b;
+        this.listaClient = listaClient;
+        listaClient.add(client);
     }
 
     public void run() {
-        int numrand = this.numrand;
-        int num;
-        int cont = 0;
+        Biglietto b = this.b;
+        Socket client = this.client;
         try {
-            System.out.println("sono collegato al client: " + client.getInetAddress() + " suo numero è " + numrand);
             // creao i tubi
             this.inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
             this.outVersoClient = new DataOutputStream(client.getOutputStream());
+            BufferedReader leggiTastiera = new BufferedReader(new InputStreamReader(System.in));
+            String daRitornare = "";
+            String richiesta;
             // invio al client
             do {
-                // leggo il numero in arrivo dal client
-                num = Integer.parseInt(inDalClient.readLine());
+                richiesta = inDalClient.readLine();
+                System.out.println("il client " + client.getInetAddress() + " inviato:" + richiesta);
+                richiesta = richiesta.toUpperCase();
+                switch (richiesta) {
+                    case "D":
+                        daRitornare = "Biglietti disponibili " + b.getDisponibili() + "";
+                        break;
+                    case "A":
+                        daRitornare = "Biglietti esauriti";
+                        if (b.getDisponibili() > 0) {
+                            b.acquista();
+                            daRitornare = "Biglietto acquistato";
+                            if (b.getDisponibili() <= 0) {
 
-                String daRitornare = "";
+                                for (Socket socket : listaClient) {
+                                    System.out.println("invio");
+                                    DataOutputStream o = new DataOutputStream(socket.getOutputStream());
+                                    o.writeBytes("TUTTO ESAURITO!!!!" + "\n");
+                                }
+                            }
+                        }
+                        break;
+                    case "Q":
+                        daRitornare = "q";
+                        System.out.println("client " + client.getInetAddress() + " ha richiesto di chiudere");
+                        break;
 
-                if (num == numrand) {
-                    daRitornare = "3";
-                }
-                if (num > numrand) {
-                    daRitornare = "2";
-                }
-                if (num < numrand) {
-                    daRitornare = "1";
+                    default:
+                        daRitornare = "inserimento invalido";
+                        break;
                 }
 
                 outVersoClient.writeBytes(daRitornare + "\n");
-                daRitornare = client.getInetAddress() + " da indovinare : " + numrand
-                        + " utente ha messo: " + num + " ritorno: " + daRitornare;
-                System.out.println(daRitornare);
-                cont++;
-            } while (numrand != num);
-            // invio il numero di tentativi
-            outVersoClient.writeBytes(cont + "\n");
-            System.out.println("\nclient " + client.getInetAddress() + " ha finito con " + cont + " tentaivi");
+            } while (!richiesta.equals("Q"));
+            System.out.println("\n tutto chiuso con il client " + client.getInetAddress());
         } catch (Exception e) {
             System.out.println("\t\terrore nella comunicazione: " + e.getMessage());
         }

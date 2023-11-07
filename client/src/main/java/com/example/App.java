@@ -17,36 +17,17 @@ public class App {
             // creo i buffer e stream per comunicare
             DataOutputStream outVersoServer = new DataOutputStream(socket.getOutputStream());
             BufferedReader inDalServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String rigaRitornata;
+            BufferedReader leggiTastiera = new BufferedReader(new InputStreamReader(System.in));
+            String rigaRitornata = "";
+            String scelta = "";
+            Ascolto a = new Ascolto(inDalServer);
+            a.start();
             do {
-                // leggo un numero dalla tastiera
-                System.out.println("metti un numero...");
-                BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-                // converto in int
-                Integer num = Integer.parseInt(in.readLine());
-                // invio il numero al server
-                outVersoServer.writeBytes(num + "\n");
-                // aspetto la risposta dal server
-                rigaRitornata = inDalServer.readLine();
-                switch (rigaRitornata) {
-                    case "1":
-                        System.out.println("il tuo numero inserito è basso...");
-                        break;
-                    case "2":
-                        System.out.println("il tuo numero inserito è alto...");
-                        break;
-                    case "3":
-                        System.out.println("il tuo numero inserito è giusto");
-                        break;
-                    default:
-                        break;
-                }
-            } while (!rigaRitornata.equals("3"));
-            // aspetto il numero di tentativi dal server
-            rigaRitornata = inDalServer.readLine();
-            // stampo
-            System.out.println("\n\nFine " + rigaRitornata);
-            // chiudo il socket (chiuso dal client!)
+                System.out.println("fai la scelta");
+                scelta = leggiTastiera.readLine();
+                outVersoServer.writeBytes(scelta+"\n");
+                scelta = scelta.toUpperCase();
+            } while (!scelta.equals("Q"));
             socket.close();
 
         } catch (Exception e) {
