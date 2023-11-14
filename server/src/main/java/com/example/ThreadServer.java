@@ -6,14 +6,14 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ThreadGioco extends Thread {
+public class ThreadServer extends Thread {
     Socket client;
     Biglietto b;
     BufferedReader inDalClient;
     DataOutputStream outVersoClient;
     ArrayList<Socket> listaClient;
 
-    public ThreadGioco(Socket client, Biglietto b, ArrayList<Socket> listaClient) {
+    public ThreadServer(Socket client, Biglietto b, ArrayList<Socket> listaClient) {
         this.client = client;
         this.b = b;
         this.listaClient = listaClient;

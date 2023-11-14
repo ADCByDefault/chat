@@ -20,7 +20,7 @@ public class App {
                 // apro il socket di ascolto
                 Socket client = serverSocket.accept();
                 // passo tutto alla classe ThreadGioco
-                ThreadGioco th = new ThreadGioco(client, b, listaClient);
+                ThreadServer th = new ThreadServer(client, b, listaClient);
                 th.start();
             }
         } catch (Exception e) {
