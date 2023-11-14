@@ -17,7 +17,7 @@ public class Ascolto extends Thread {
                 rigaRitornata = rigaRitornata.toUpperCase();
             }while(!rigaRitornata.equals("Q"));
         } catch (Exception e) {
-            System.out.println("errore");
+            System.out.println("errore...CHIUDO TUTTO (Ascolto.java)");
         }
     }
 }

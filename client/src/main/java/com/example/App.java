@@ -22,16 +22,16 @@ public class App {
             String scelta = "";
             Ascolto a = new Ascolto(inDalServer);
             a.start();
+            System.out.println("C per vedere i client, per inviare un messaggio invia prima il nome del client e poi messaggio");
             do {
-                System.out.println("fai la scelta");
                 scelta = leggiTastiera.readLine();
+                scelta = scelta.toUpperCase().trim();
+                System.out.println("invio al server : " + scelta );
                 outVersoServer.writeBytes(scelta+"\n");
-                scelta = scelta.toUpperCase();
             } while (!scelta.equals("Q"));
             socket.close();
-
         } catch (Exception e) {
-            System.out.println("Errore");
+            System.out.println("Errore... CHIUDO TUTTO (main)");
         }
     }
 }

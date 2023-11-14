@@ -10,21 +10,20 @@ import java.util.ArrayList;
  */
 public class App {
     public static void main(String[] args) {
-        ArrayList <Socket> listaClient = new ArrayList();
-        try {
-            // creao un socket
+        ListaClient lista = new ListaClient();
+        try {   
+            // creato un socket
             ServerSocket serverSocket = new ServerSocket(3000);
-            Biglietto b = new Biglietto(6);
             // accetto il client che si collega
             while (true) {
                 // apro il socket di ascolto
                 Socket client = serverSocket.accept();
-                // passo tutto alla classe ThreadGioco
-                ThreadServer th = new ThreadServer(client, b, listaClient);
+                // passo tutto alla classe ThreadServer
+                ThreadServer th = new ThreadServer(client, lista);
                 th.start();
             }
         } catch (Exception e) {
-            System.out.println("\nErrore");
+            System.out.println("\nErrore nel Main del server");
         }
     }
 }
