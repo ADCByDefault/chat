@@ -1,6 +1,9 @@
 #A school project
 
-
+### Componenti del gruppo
+- Riccardo Grandi
+- Swaran Singh
+- Ardi Ndreu
 
 # Chat 
 
