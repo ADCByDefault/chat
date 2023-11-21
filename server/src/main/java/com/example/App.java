@@ -2,7 +2,6 @@ package com.example;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  * Hello world!
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 public class App {
     public static void main(String[] args) {
         ListaClient lista = new ListaClient();
-        try {   
+        try {
             // creato un socket
             ServerSocket serverSocket = new ServerSocket(3000);
             // accetto il client che si collega

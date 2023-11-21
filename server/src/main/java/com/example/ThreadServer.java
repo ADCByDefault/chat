@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ThreadServer extends Thread {
     Socket client;
@@ -17,17 +15,34 @@ public class ThreadServer extends Thread {
     public ThreadServer(Socket client, ListaClient listaClient) {
         this.client = client;
         this.listaClient = listaClient;
-        System.out.println("\n creo un thread con " + client.getInetAddress());
+        this.nomeClient = "null";
     }
 
     public void inviaMessaggio(Socket c, String messaggio) {
         try {
             DataOutputStream out = new DataOutputStream(c.getOutputStream());
             out.writeBytes(nomeClient + ": " + messaggio + "\n");
+            System.out.println("\n" + c.getInetAddress() + ": " + messaggio);
         } catch (Exception e) {
             System.out.println("errore nell'invio del messaggio");
         }
-        System.out.println("\n invio il messaggio a client: " + c.getInetAddress() + " : " + messaggio);
+    }
+
+    public void inviaMessaggioDalServer(String messaggio) {
+        try {
+            outVersoClient.writeBytes("server: " + messaggio + "\n");
+        } catch (Exception e) {
+            System.out.println("errore nell'invio del messaggio");
+        }
+    }
+
+    public void broadcast(String messaggio) {
+        for (Socket c : listaClient.getAllClients()) {
+            if (this.client == c) {
+                continue;
+            }
+            inviaMessaggio(c, messaggio);
+        }
     }
 
     public void run() {
@@ -36,59 +51,57 @@ public class ThreadServer extends Thread {
             // creao i tubi
             this.inDalClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
             this.outVersoClient = new DataOutputStream(client.getOutputStream());
-            String richiesta = "";
+            String richiesta;
+            String messaggio;
             do {
-                System.out.println("aspetto il nome del client");
+                inviaMessaggioDalServer("Inserisci un nome utente...");
                 richiesta = inDalClient.readLine();
-                System.out.println("nome ricevuto : " + richiesta);
-
                 if (listaClient.getClient(richiesta) != null) {
-                    inviaMessaggio(client, "nickname gia' esistente");
+                    inviaMessaggioDalServer("Nickname già esistente");
                     continue;
                 }
+                if (richiesta.equals("") || richiesta.equals("SERVER") || richiesta.equals("@ALL")) {
+                    inviaMessaggioDalServer("Nickname non valido");
+                }
                 this.nomeClient = richiesta;
-                listaClient.aggiungiClient(client, richiesta);
-                System.out.println("ho aggiunto " + nomeClient + " alla lista");
+                listaClient.aggiungiClient(client, this.nomeClient);
+                broadcast("Sono Venuto a fare festa!!!");
                 break;
             } while (true);
-            // invio al client
             do {
+                inviaMessaggioDalServer("Fai la tua scelta...");
                 richiesta = inDalClient.readLine();
-                System.out.println("il client " + client.getInetAddress() + " inviato:" + richiesta);
                 richiesta = richiesta.toUpperCase();
                 switch (richiesta) {
-                    case "C":
-                        System.out.println("entro in c");
-                        String listaNomi = listaClient.getAllNames();
-                        inviaMessaggio(client, "i client disponibili sono: -" + listaNomi);
-                        break;
-                    case "B":
-                        System.out.println("aspetto il messaggio:");
-                        richiesta = inDalClient.readLine();
-                        System.out.println("invio brodcast da parte di: " + nomeClient);
-                        for (Socket c : listaClient.getAllClients()) {
-                            if (this.client == c) {
-                                continue;
-                            }
-                            inviaMessaggio(c, richiesta);
-                        }
-                        break;
                     case "Q":
-                        System.out.println("entro in q");
-                        System.out.println("client " + client.getInetAddress() + " ha richiesto di chiudere");
+                        System.out.println("client " + client.getInetAddress() + " ha chiesto di chiudere");
+                        broadcast("se l'è cantata e se l'è suonata");
                         break;
-
+                    case "C":
+                        inviaMessaggioDalServer("I client disponibili sono: -" + listaClient.getAllNames());
+                        break;
+                    case "@ALL":
+                        // "" o "null" per annulare la scelta
+                        inviaMessaggioDalServer("Il tuo messaggio boradcast...");
+                        messaggio = inDalClient.readLine();
+                        if (messaggio.equals("") || messaggio.equals("NULL")) {
+                            break;
+                        }
+                        System.out.println("invio brodcast da parte di: " + nomeClient);
+                        this.broadcast(messaggio);
+                        break;
                     default:
-                        System.out.println("entro in default con richiesta: " + richiesta);
                         Socket c = listaClient.getClient(richiesta);
                         if (c == null) {
-                            System.out.println("\n client non trovato");
-                            inviaMessaggio(client, "il lama che cerchi non esiste, coglione!!");
-                        } else {
-                            System.out.println("aspetto il messaggio:");
-                            richiesta = inDalClient.readLine();
-                            inviaMessaggio(c, richiesta);
+                            inviaMessaggio(client, "Il lama che cerchi non esiste!");
+                            break;
                         }
+                        inviaMessaggioDalServer("Cosa li vuoi dire?...");
+                        messaggio = inDalClient.readLine();
+                        if (messaggio.equals("") || messaggio.equals("NULL")) {
+                            break;
+                        }
+                        inviaMessaggio(c, messaggio);
                         break;
                 }
             } while (!richiesta.equals("Q"));
