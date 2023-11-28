@@ -9,7 +9,7 @@
 
 Realizzazione di una chat client-server.
 
-## Indice
+# Indice  
 
 * [Il funzionamento](#funzionamento)
 * [Casi d'uso del client](#casiClient)
