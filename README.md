@@ -30,15 +30,12 @@ La nostra chat funziona in questo modo:
 Il client viene utilizzato per scambiare messaggi con gli altri client.
 
 > **Nota 1:** se il client si è connesso per la prima volta deve inviare obbligatoriamente il proprio nome al server altrimenti non può inviare messaggi agli altri client.
-> **Nota 2:** se non ci sono altri client connessi il server invierà un messaggio di errore.
-
-
 
 ## <a id="casiServer" /> Casi d'uso del server
 
 Il server viene utilizzato per gestire la comunicazione tra i client connessi.
 
->  **Nota:** il server è in grado di gestire eventuali errori o situazioni inattesse come per esempio un client che vuole comunicare anche se è l'unico connesso oppure se il client inserisce il nome di un client insistente ecc.
+>  **Nota:** il server è in grado di gestire eventuali errori o situazioni inattesse come per esempio se il client inserisce il nome di un client insistente.
 
 ##  <a id="protocollo" /> Il protocollo
 
