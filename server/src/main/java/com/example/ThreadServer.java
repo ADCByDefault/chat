@@ -57,7 +57,7 @@ public class ThreadServer extends Thread {
                 inviaMessaggioDalServer("Inserisci un nome utente...");
                 richiesta = inDalClient.readLine();
                 if (listaClient.getClient(richiesta) != null) {
-                    inviaMessaggioDalServer("\u001B[31Nickname già esistente\u001B[37");
+                    inviaMessaggioDalServer("\u001B[31Nickname gia' esistente\u001B[37");
                     continue;
                 }
                 if (richiesta.equals("") || richiesta.equals("SERVER") || richiesta.equals("@ALL")) {
@@ -75,7 +75,7 @@ public class ThreadServer extends Thread {
                 switch (richiesta) {
                     case "Q":
                         System.out.println("client " + client.getInetAddress() + " ha chiesto di chiudere");
-                        broadcast("\u001B[31mse l'è cantata e se l'è suonata\u001B[37m");
+                        broadcast("\u001B[31mse l'e' cantata e se l'e' suonata\u001B[37m");
                         listaClient.rimuoviClient(nomeClient);
                         break;
                     case "C":
@@ -97,7 +97,7 @@ public class ThreadServer extends Thread {
                             inviaMessaggioDalServer("\u001B[31mIl lama che cerchi non esiste!\u001B[37m");
                             break;
                         }
-                        inviaMessaggioDalServer("Cosa li vuoi dire?...");
+                        inviaMessaggioDalServer("Cosa gli vuoi dire?...");
                         messaggio = inDalClient.readLine();
                         if (messaggio.equals("") || messaggio.equals("NULL")) {
                             break;
