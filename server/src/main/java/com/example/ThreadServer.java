@@ -21,18 +21,18 @@ public class ThreadServer extends Thread {
     public void inviaMessaggio(Socket c, String messaggio) {
         try {
             DataOutputStream out = new DataOutputStream(c.getOutputStream());
-            out.writeBytes(nomeClient + ": " + messaggio + "\n");
+            out.writeBytes("\u001B[35m"+nomeClient + ":\u001B[37m " + messaggio + "\n");
             System.out.println("\n" + c.getInetAddress() + ": " + messaggio);
         } catch (Exception e) {
-            System.out.println("errore nell'invio del messaggio");
+            System.out.println("\u001B[31merrore nell'invio del messaggio\u001B[37m");
         }
     }
 
     public void inviaMessaggioDalServer(String messaggio) {
         try {
-            outVersoClient.writeBytes("server: " + messaggio + "\n");
+            outVersoClient.writeBytes("\u001B[32mserver: " + messaggio + "\u001B[37m\n");
         } catch (Exception e) {
-            System.out.println("errore nell'invio del messaggio");
+            System.out.println("\u001B[31merrore nell'invio del messaggio\u001B[37m");
         }
     }
 
@@ -41,7 +41,7 @@ public class ThreadServer extends Thread {
             if (this.client == c) {
                 continue;
             }
-            inviaMessaggio(c, messaggio);
+            inviaMessaggio(c, "\u001B[33m" + messaggio + "\u001B[37m");
         }
     }
 
@@ -57,11 +57,11 @@ public class ThreadServer extends Thread {
                 inviaMessaggioDalServer("Inserisci un nome utente...");
                 richiesta = inDalClient.readLine();
                 if (listaClient.getClient(richiesta) != null) {
-                    inviaMessaggioDalServer("Nickname già esistente");
+                    inviaMessaggioDalServer("\u001B[31Nickname già esistente\u001B[37");
                     continue;
                 }
                 if (richiesta.equals("") || richiesta.equals("SERVER") || richiesta.equals("@ALL")) {
-                    inviaMessaggioDalServer("Nickname non valido");
+                    inviaMessaggioDalServer("\u001B[31Nickname non valido\u001B[37");
                 }
                 this.nomeClient = richiesta;
                 listaClient.aggiungiClient(client, this.nomeClient);
@@ -75,7 +75,7 @@ public class ThreadServer extends Thread {
                 switch (richiesta) {
                     case "Q":
                         System.out.println("client " + client.getInetAddress() + " ha chiesto di chiudere");
-                        broadcast("se l'è cantata e se l'è suonata");
+                        broadcast("\u001B[31mse l'è cantata e se l'è suonata\u001B[37m");
                         listaClient.rimuoviClient(nomeClient);
                         break;
                     case "C":
@@ -94,7 +94,7 @@ public class ThreadServer extends Thread {
                     default:
                         Socket c = listaClient.getClient(richiesta);
                         if (c == null) {
-                            inviaMessaggio(client, "Il lama che cerchi non esiste!");
+                            inviaMessaggioDalServer("\u001B[31mIl lama che cerchi non esiste!\u001B[37m");
                             break;
                         }
                         inviaMessaggioDalServer("Cosa li vuoi dire?...");
