@@ -76,6 +76,7 @@ public class ThreadServer extends Thread {
                     case "Q":
                         System.out.println("client " + client.getInetAddress() + " ha chiesto di chiudere");
                         broadcast("se l'è cantata e se l'è suonata");
+                        listaClient.rimuoviClient(nomeClient);
                         break;
                     case "C":
                         inviaMessaggioDalServer("I client disponibili sono: -" + listaClient.getAllNames());

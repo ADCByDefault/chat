@@ -33,4 +33,8 @@ public class ListaClient {
     public ArrayList<Socket> getAllClients() {
         return new ArrayList<Socket>(lista.values());
     }
+
+    public void rimuoviClient(String name){
+        lista.remove(name);
+    }
 }
