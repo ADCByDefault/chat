@@ -23,8 +23,7 @@ La nostra chat funziona in questo modo:
 1. il client, dopo la connessione al server, deve inviare come prima informazione il proprio nome;  
 2. il client, dopo aver inviato il nome, può inviare messaggi ad un singolo destinatario oppure a tutti (no gruppi); 
 3. il server può inoltrare i messaggi agli altri client (singolo o tutti);  
-4. il server gestisce la situazione in cui c'è solo un solo client collegato (impossibile inoltrare il messaggio);  
-5. il client gestisce attraverso un messaggio speciale la chiusura della connessione verso il server.
+4. il client gestisce attraverso un messaggio speciale la chiusura della connessione verso il server.
 
 ## <a id="casiClient" /> Casi d'uso del client
 
