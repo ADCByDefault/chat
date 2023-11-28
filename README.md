@@ -29,7 +29,7 @@ La nostra chat funziona in questo modo:
 
 Il client viene utilizzato per scambiare messaggi con gli altri client.
 
-> **Nota 1:** se il client si è connesso per la prima volta deve inviare obbligatoriamente il proprio nome al server altrimenti non può inviare messaggi agli altri client.
+> **Nota:** se il client si è connesso per la prima volta deve inviare obbligatoriamente il proprio nome al server altrimenti non può inviare messaggi agli altri client.
 
 ## <a id="casiServer" /> Casi d'uso del server
 
